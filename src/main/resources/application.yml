@@ -54,14 +54,14 @@ spring:
 
 ---
 
-env: QA
+env: PROD
 
 spring:
   config:
     activate:
-      on-profile: development
+      on-profile: prod
   datasource:
-    url: ${mysqlUrl}
+    url: jdbc:mysql:///${db}?cloudSqlInstance=${dbInstanceName}&socketFactory=com.google.cloud.sql.mysql.SocketFactory
     username: ${mysqlUsername}
     password: ${mysqlPassword}
     initialization-mode: never
