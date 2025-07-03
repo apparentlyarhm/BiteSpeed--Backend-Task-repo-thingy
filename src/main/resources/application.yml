@@ -1,0 +1,76 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: coolname
+
+  profiles:
+    active: local
+    default: local
+
+  banner:
+    location: classpath:/banner.txt
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+springdoc: # http://localhost:8080/misc/swagger-ui/index.html
+  api-docs:
+    path: /misc/api-docs
+  swagger-ui:
+    path: /misc/swagger-ui.html
+    enabled: true
+    tagsSorter: alpha
+    operationsSorter: method
+
+---
+
+env: DEV
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/bitespeed-db
+    username: root
+    password: arhum123
+    initialization-mode: always
+    hikari:
+      maximum-pool-size: 2
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+---
+
+env: QA
+
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    url: ${mysqlUrl}
+    username: ${mysqlUsername}
+    password: ${mysqlPassword}
+    initialization-mode: never
+    hikari:
+      maximum-pool-size: 6
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
