@@ -26,6 +26,7 @@ public class IdentifyServiceImpl implements IdentityService {
         String phoneNumber = request.getPhoneNumber();
 
         List<Contact> matchingContacts = contactRepo.findByEmailOrPhoneNumberOrderByCreatedAtAsc(email, phoneNumber);
+        assert matchingContacts.size() <= 2; // If assertion fails something is wrong
 
         if (matchingContacts.isEmpty()) {
             Contact newContact = createNewContact(email, phoneNumber, null, LinkPrecedence.PRIMARY);
@@ -63,6 +64,7 @@ public class IdentifyServiceImpl implements IdentityService {
 
     private Contact createNewContact(String email, String phoneNumber, String linkedId, LinkPrecedence precedence) {
         Contact contact = new Contact();
+
         contact.setEmail(email);
         contact.setPhoneNumber(phoneNumber);
         contact.setLinkedId(linkedId);

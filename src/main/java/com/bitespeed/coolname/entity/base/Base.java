@@ -24,12 +24,14 @@ public abstract class Base {
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void onInsert(){
-        this.createdAt = LocalDateTime.now();
+    public void populateTimeOnInsert() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 
     @PreUpdate
-    public void onUpdate(){
+    public void populateTimeOnUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }

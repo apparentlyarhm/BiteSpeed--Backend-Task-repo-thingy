@@ -16,6 +16,7 @@ public class Contact extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "contact_id", unique = true, nullable = false, updatable = false)
