@@ -73,4 +73,4 @@ spring:
         show_sql: false
         format_sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none # we decouple the check. if the db is off and the app tries to start, this might break it. we are sort of breaking IoC

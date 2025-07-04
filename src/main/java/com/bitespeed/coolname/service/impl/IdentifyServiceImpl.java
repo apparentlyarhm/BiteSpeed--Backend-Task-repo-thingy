@@ -1,6 +1,8 @@
 package com.bitespeed.coolname.service.impl;
 
 import com.bitespeed.coolname.entity.Contact;
+import com.bitespeed.coolname.exception.BaseException;
+import com.bitespeed.coolname.exception.RestrictedException;
 import com.bitespeed.coolname.model.ContactResponse;
 import com.bitespeed.coolname.model.IdentifyRequest;
 import com.bitespeed.coolname.model.IdentifyResponse;
@@ -8,20 +10,32 @@ import com.bitespeed.coolname.model.enums.LinkPrecedence;
 import com.bitespeed.coolname.repository.ContactRepo;
 import com.bitespeed.coolname.service.contract.IdentityService;
 import jakarta.transaction.Transactional;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
 public class IdentifyServiceImpl implements IdentityService {
+
+    private final LocalTime blockStart = LocalTime.of(22, 0); // 10 PM
+    private final LocalTime blockEnd = LocalTime.of(7, 0);    // 7 AM
 
     @Autowired
     private ContactRepo contactRepo;
 
     @Override
     @Transactional
-    public IdentifyResponse identifyContact(IdentifyRequest request) {
+    public IdentifyResponse identifyContact(IdentifyRequest request) throws BaseException {
+        LocalTime now = LocalTime.now();
+        boolean isBlocked = now.isAfter(blockStart) || now.isBefore(blockEnd);
+
+        if (isBlocked) {
+            throw new RestrictedException(111, "Access is not allowed between 10 PM and 7 AM, i am trying to save costs here so i just close the database ");
+        }
+
         String email = request.getEmail();
         String phoneNumber = request.getPhoneNumber();
 
