@@ -6,7 +6,7 @@ spring:
     name: coolname
 
   profiles:
-    active: local
+    active: prod
     default: local
 
   banner:
@@ -26,6 +26,10 @@ springdoc: # http://localhost:8080/misc/swagger-ui/index.html
     enabled: true
     tagsSorter: alpha
     operationsSorter: method
+
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
 
 ---
 
@@ -66,7 +70,8 @@ spring:
     password: ${mysqlPassword}
     initialization-mode: never
     hikari:
-      maximum-pool-size: 6
+      maximum-pool-size: 1 # will this save costs?
+
   jpa:
     properties:
       hibernate:
