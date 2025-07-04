@@ -8,9 +8,7 @@ import lombok.Setter;
 @Setter
 public class IdentifyRequest {
 
-    @NotNull
     private String email;
 
-    @NotNull
     private String phoneNumber;
 }

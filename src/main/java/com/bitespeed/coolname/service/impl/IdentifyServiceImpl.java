@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -22,6 +23,7 @@ public class IdentifyServiceImpl implements IdentityService {
 
     private final LocalTime blockStart = LocalTime.of(22, 0); // 10 PM
     private final LocalTime blockEnd = LocalTime.of(7, 0);    // 7 AM
+    private static final ZoneId IST = ZoneId.of("Asia/Kolkata");
 
     @Autowired
     private ContactRepo contactRepo;
@@ -29,7 +31,7 @@ public class IdentifyServiceImpl implements IdentityService {
     @Override
     @Transactional
     public IdentifyResponse identifyContact(IdentifyRequest request) throws BaseException {
-        LocalTime now = LocalTime.now();
+        LocalTime now = LocalTime.now(IST);
         boolean isBlocked = now.isAfter(blockStart) || now.isBefore(blockEnd);
 
         if (isBlocked) {
