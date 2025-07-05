@@ -22,6 +22,6 @@ public class MainController {
     @PostMapping(value = "/identify", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "It does something bro")
     public IdentifyResponse identify(@RequestBody IdentifyRequest request) throws BaseException {
-        return identifyService.identifyContact(request);
+        return null;
     }
 }

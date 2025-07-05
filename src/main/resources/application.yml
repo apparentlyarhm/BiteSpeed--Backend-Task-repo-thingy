@@ -2,6 +2,19 @@ server:
   port: 8080
 
 spring:
+  # common
+  datasource:
+    url: jdbc:h2:mem:maintenance-db;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+      hibernate:
+        ddl-auto: none
+    flyway:
+      enabled: false
+
   application:
     name: coolname
 
@@ -21,15 +34,16 @@ spring:
 springdoc: # http://localhost:8080/misc/swagger-ui/index.html
   api-docs:
     path: /misc/api-docs
+    enabled: false
   swagger-ui:
     path: /misc/swagger-ui.html
-    enabled: true
+    enabled: false
     tagsSorter: alpha
     operationsSorter: method
 
 logging:
   level:
-    com.zaxxer.hikari: DEBUG
+    com.zaxxer.hikari: INFO
 
 ---
 
@@ -39,32 +53,7 @@ spring:
   config:
     activate:
       on-profile: local
-  datasource:
-    url: jdbc:mysql://localhost:3306/bitespeed-db
-    username: root
-    password: arhum123
-    initialization-mode: always
-    hikari:
-      maximum-pool-size: 2
 
-      # config for fast failure on local mysql
-      connection-timeout: 1000 # If this time is exceeded without a connection becoming available, a SQLException will be thrown
-      minimum-idle: 0  # can keep 0 connections when idle
-      idle-timeout: 20000 # after this time, the idle connections will be removed
-      keepalive-time: 0
-      max-lifetime: 1740000
-      validation-timeout: 250 # maximum amount of time that a connection will be tested for aliveness, must be less than connection timeout
-      initialization-fail-timeout: -1
-
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-    hibernate:
-      ddl-auto: validate
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 ---
 
@@ -74,26 +63,3 @@ spring:
   config:
     activate:
       on-profile: prod
-  datasource:
-    url: jdbc:mysql:///${db}?cloudSqlInstance=${dbInstanceName}&socketFactory=com.google.cloud.sql.mysql.SocketFactory
-    username: ${mysqlUsername}
-    password: ${mysqlPassword}
-    initialization-mode: never
-    hikari:
-      maximum-pool-size: 1 # will this save costs?
-
-      connection-timeout: 3000 # If this time is exceeded without a connection becoming available, a SQLException will be thrown
-      minimum-idle: 0  # keep 0 connections when idle
-      idle-timeout: 10000 # after this time, the idle connections will be removed
-      keepalive-time: 0
-      max-lifetime: 1740000
-      validation-timeout: 250 # maximum amount of time that a connection will be tested for aliveness, must be less than connection timeout
-      initialization-fail-timeout: -1
-
-  jpa:
-    properties:
-      hibernate:
-        show_sql: false
-        format_sql: true
-    hibernate:
-      ddl-auto: none # we decouple the check. if the db is off and the app tries to start, this might break it. we are sort of breaking IoC
